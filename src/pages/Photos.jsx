@@ -29,7 +29,7 @@ const Photos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  const imagesPerPage = 50; // Number of images to display per page
+  const imagesPerPage = 30; // Number of images to display per page
   const [images, setImages] = useState([]); // User-uploaded images
   const [fetchedImages, setFetchedImages] = useState([]); // Fetched images from Pixabay
   const [latestImages, setLatestImages] = useState([]); // Latest images from Pixabay
@@ -67,7 +67,7 @@ const Photos = () => {
   const fetchImagesFromPixabay = async (term) => {
     try {
       const response = await fetch(
-        `https://pixabay.com/api/?key=${API_KEY}&q=${term}&image_type=photo&per_page=30`
+        `https://pixabay.com/api/?key=${API_KEY}&q=${term}&image_type=photo&per_page=200`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,6 +76,23 @@ const Photos = () => {
       setFetchedImages(data.hits);
     } catch (error) {
       console.error("Error fetching images from Pixabay:", error);
+    }
+  };
+
+  const fetchMoreImages = async (term) => {
+    try {
+      const response = await fetch(
+        `https://pixabay.com/api/?key=${API_KEY}&q=${term}&image_type=photo&per_page=200&page=${
+          Math.ceil(fetchedImages.length / imagesPerPage) + 1
+        }`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setFetchedImages((prevImages) => [...prevImages, ...data.hits]); // Append new images to the existing ones
+    } catch (error) {
+      console.error("Error fetching more images from Pixabay:", error);
     }
   };
 
@@ -110,10 +127,14 @@ const Photos = () => {
   };
 
   // Pagination logic
-  const handleNext = () => {
+  const handleNext = async () => {
     console.log("Next button clicked");
     if (currentPage * imagesPerPage < fetchedImages.length) {
       setCurrentPage(currentPage + 1);
+    } else {
+      // Fetch more images from Pixabay when reaching the end of the current fetched images
+      await fetchMoreImages(searchTerm); // Ensure this function is working as expected
+      setCurrentPage(currentPage + 1); // Increment page after fetching more images
     }
   };
 

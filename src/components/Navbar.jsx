@@ -5,6 +5,7 @@ import "remixicon/fonts/remixicon.css";
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false); // New state for mobile dropdown
   const location = useLocation(); // Get the current location
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -14,6 +15,10 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const toggleMobileDropdown = () => {
+    setMobileDropdownOpen(!mobileDropdownOpen); // Toggle mobile dropdown
   };
 
   // Determine text color based on the current page
@@ -33,7 +38,7 @@ const Navbar = () => {
     location.pathname === "/upload" ? "text-white" : "text-black";
 
   return (
-    <div className="absolute z-20 flex justify-between items-center px-10 py-4 w-full">
+    <div className="absolute z-20 flex justify-between items-center px-4 py-4 w-full">
       <div className="flex items-end gap-10">
         <Link to="/">
           <h1
@@ -88,10 +93,15 @@ const Navbar = () => {
           <i className="ri-menu-3-line text-2xl"></i>
         </button>
       </div>
-
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-16 right-0 w-full bg-white shadow-lg md:hidden">
+        <div className="fixed top-0 right-0 w-full h-screen bg-white shadow-lg md:hidden">
+          <div className="flex items-center justify-between px-4 py-4">
+            <h1 className="text-2xl font-semibold">HeavenStock</h1>
+            <button onClick={toggleMenu} className="md:hidden text-black">
+              <i className="ri-menu-3-line text-2xl"></i>
+            </button>
+          </div>
           <Link
             to="/"
             className="block px-4 py-3 text-black hover:bg-black hover:text-white"
@@ -99,24 +109,43 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            to="/explore/category1"
-            className="block px-4 py-3 text-black hover:bg-black hover :text-white"
-          >
-            Category 1
-          </Link>
-          <Link
-            to="/explore/category2"
+            to="/collections"
             className="block px-4 py-3 text-black hover:bg-black hover:text-white"
           >
-            Category 2
+            Collections
           </Link>
-          <Link
-            to="/explore/category3"
-            className="block px-4 py-3 text-black hover:bg-black hover:text-white"
+          <button
+            onClick={toggleMobileDropdown} // Toggle mobile dropdown
+            className="block px-4 py-3 text-black hover:bg-black hover:text-white w-full text-left"
           >
-            Category 3
-          </Link>
-          <div className="flex flex-col hi gap-2 p-4">
+            Browse
+            <i
+              className={`ri-arrow-${mobileDropdownOpen ? "up" : "down"}-line`}
+            ></i>
+          </button>
+          {mobileDropdownOpen && (
+            <div className="pl-4">
+              <Link
+                to="/explore/category1"
+                className="block px-4 py-2 text-black hover:bg-black hover:text-white"
+              >
+                Category 1
+              </Link>
+              <Link
+                to="/explore/category2"
+                className="block px-4 py-2 text-black hover:bg-black hover:text-white"
+              >
+                Category 2
+              </Link>
+              <Link
+                to="/explore/category3"
+                className="block px-4 py-2 text-black hover:bg-black hover:text-white"
+              >
+                Category 3
+              </Link>
+            </div>
+          )}
+          <div className="flex flex-col gap-2 p-4">
             <button
               onClick={handleUploadClick} // Use onClick to navigate
               className={`${uploadButtonBgColor} ${uploadButtonTextColor} px-6 py-2 rounded-full shadow-lg`}

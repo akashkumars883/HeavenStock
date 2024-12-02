@@ -1,13 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+const API_KEY = "23102215-483401647597ecd040735b5ed"; // Replace with your Pixabay API key
 
-const Header = ({ imageSrc, title, description, onSearch }) => {
+const getImageForToday = (images) => {
+  const today = new Date();
+  const dayOfYear = Math.floor(
+    (today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24
+  );
+  return images[dayOfYear % images.length]; // Use modulo to cycle through images
+};
+
+const Header = ({ title, description, onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [images, setImages] = useState([]);
+  const [imageSrc, setImageSrc] = useState("");
+
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    onSearch(query); // Call onSearch to update the search query in the parent
+  };
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(
+          `https://pixabay.com/api/?key=${API_KEY}&q=stock+photos&image_type=photo&per_page=200`
+        );
+        const data = await response.json();
+        setImages(data.hits.map((hit) => hit.webformatURL)); // Store image URLs
+      } catch (error) {
+        console.error("Error fetching images from Pixabay:", error);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      const dailyImage = getImageForToday(images);
+      setImageSrc(dailyImage);
+    }
+  }, [images]);
+
   return (
     <div className="relative">
-      <img
-        src={imageSrc}
-        alt="Header"
-        className="w-full h-[60vh] object-cover object-bottom"
-      />
+      {imageSrc && (
+        <img
+          src={imageSrc}
+          alt="Header"
+          className="w-full h-[60vh] object-cover object-bottom"
+        />
+      )}
       <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <div>
           <h1 className="text-white text-center text-2xl font-medium sm:text-4xl md:text-6xl py-4 px-6 w-full md:w-[70vw] sm:w-[80vw] mx-auto">
@@ -25,7 +69,7 @@ const Header = ({ imageSrc, title, description, onSearch }) => {
                 type="search"
                 placeholder="Search for stock photos..."
                 className="w-full sm:w-[50vw] px-14 py-3 sm:py-4 rounded-full text-base"
-                onChange={(e) => onSearch(e.target.value)} // Call onSearch on input change
+                onChange={handleSearchChange} // Call handleSearchChange on input change
               />
             </div>
           </div>

@@ -4,12 +4,12 @@ import { NavLink } from "react-router-dom";
 const NavMenu = () => {
   return (
     <div>
-      <div className="flex justify-center items-center">
-        <div className="hidden sm:flex space-x-1">
+      <div className="flex flex-col sm:flex-row justify-center items-center">
+        <div className="flex flex-wrap justify-center mb-4 sm:mb-0">
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `hover:bg-black hover:text-white px-8 py-3 rounded-full hover:shadow-lg ${
+              `hover:bg-black hover:text-white px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:shadow-lg ${
                 isActive ? "bg-black text-white" : ""
               }`
             }
@@ -19,7 +19,7 @@ const NavMenu = () => {
           <NavLink
             to="/photos"
             className={({ isActive }) =>
-              `hover:bg-black hover:text-white px-8 py-3 rounded-full hover:shadow-lg ${
+              `hover:bg-black hover:text-white px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:shadow-lg ${
                 isActive ? "bg-black text-white" : ""
               }`
             }
@@ -29,7 +29,7 @@ const NavMenu = () => {
           <NavLink
             to="/videos"
             className={({ isActive }) =>
-              `hover:bg-black hover:text-white px-8 py-3 rounded-full hover:shadow-lg ${
+              `hover:bg-black hover:text-white px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:shadow-lg ${
                 isActive ? "bg-black text-white" : ""
               }`
             }
@@ -39,7 +39,7 @@ const NavMenu = () => {
           <NavLink
             to="/illustrations"
             className={({ isActive }) =>
-              `hover:bg-black hover:text-white px-8 py-3 rounded-full hover:shadow-lg ${
+              `hover:bg-black hover:text-white px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:shadow-lg ${
                 isActive ? "bg-black text-white" : ""
               }`
             }
