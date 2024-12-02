@@ -135,7 +135,7 @@ const Photos = () => {
   return (
     <>
       <Header
-        imageSrc="src/assets/leaf-5354476_1280.jpg"
+        imageSrc="https://cdn.pixabay.com/photo/2022/12/04/16/17/leaves-7634894_640.jpg"
         title="Instant Access to Thousands of High-Quality Images"
         description="Unlock the Power of Visual Storytelling with Our Extensive Library of High-Quality Stock Images"
         onSearch={handleSearch} // Pass the search handler to Header
